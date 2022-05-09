@@ -2,9 +2,12 @@ package fr.univavignon.pokedex.api;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@ExtendWith(MockitoExtension.class)
 class IPokemonFactoryTest {
 
     private IPokemonFactory pokemonFactory;
@@ -18,7 +21,7 @@ class IPokemonFactoryTest {
     void createPokemon() {
         Pokemon bulbizarre = pokemonFactory.createPokemon(0,613,64, 4000, 4 );
         Pokemon aquali = pokemonFactory.createPokemon(133,2729,202, 5000, 4 );
-        Pokemon pokemonWithNegatifAttributes = pokemonFactory.createPokemon(-1,2729,202, 5000, 4 );
+        Pokemon pokemonWithNegatifAttributes = pokemonFactory.createPokemon(-1,-1,-1, -1, -1);
         Pokemon pokemonWithIdSuperiorThanOneHundredAndFifty = pokemonFactory.createPokemon(151,2729,202, 5000, 4 );
 
         assertNotNull(bulbizarre);

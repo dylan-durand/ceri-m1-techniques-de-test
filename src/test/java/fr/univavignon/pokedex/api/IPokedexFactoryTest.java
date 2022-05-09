@@ -21,7 +21,7 @@ class IPokedexFactoryTest {
 
     private Pokemon aquali;
 
-    private IPokedexFactory pokedexFactory = new PokedexFactory();
+    private IPokedexFactory pokedexFactory;
 
     @BeforeEach
     void setUp() {
@@ -58,30 +58,28 @@ class IPokedexFactoryTest {
     @Test
     void createPokedex() {
         assertDoesNotThrow(() -> {
-            // mock pokemonMetadataProvider and pokemonFactory
-            Mockito.when(pokemonMetadataProviderMock.getPokemonMetadata(0)).thenReturn(bulbizarre);
-            Mockito.when(pokemonMetadataProviderMock.getPokemonMetadata(1)).thenReturn(aquali);
-
-            Mockito.when(pokemonFactoryMock.createPokemon(
+                Mockito.when(pokemonFactoryMock.createPokemon(
                     Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt()))
                     .thenReturn(bulbizarre);
             Mockito.when(pokemonMetadataProviderMock.getPokemonMetadata(0)).thenReturn(aquali);
+        });
 
-            // test function
-            IPokedex pokedex = this.pokedexFactory.createPokedex(pokemonMetadataProviderMock, pokemonFactoryMock);
-            assertNotNull(pokedex);
+        // test function
+        IPokedex pokedex = this.pokedexFactory.createPokedex(pokemonMetadataProviderMock, pokemonFactoryMock);
+        assertNotNull(pokedex);
 
+        assertDoesNotThrow(() -> {
             // verify that the pokedex uses the pokemon metadata from the pokemonMetadataProvider
             assertNotNull(pokedex.getPokemonMetadata(0));
             assertEquals(aquali, pokedex.getPokemonMetadata(0));
-            Mockito.verify(pokemonMetadataProviderMock.getPokemonMetadata(0));
-
-            // verify that the created pokedex uses the pokemon created by the pokemonFactory
-            Pokemon createdPokemon = pokedex.createPokemon(0,0,0,0,0);
-            assertEquals(bulbizarre, createdPokemon);
-            Mockito.verify(pokemonFactoryMock.createPokemon(0,0,0,0,0));
-
+            Mockito.verify(pokemonMetadataProviderMock, Mockito.times(2)).getPokemonMetadata(0);
         });
+
+        // verify that the created pokedex uses the pokemon created by the pokemonFactory
+        Pokemon createdPokemon = pokedex.createPokemon(0,0,0,0,0);
+        assertEquals(bulbizarre, createdPokemon);
+        Mockito.verify(pokemonFactoryMock).createPokemon(0,0,0,0,0);
+
     }
 
 }

@@ -13,15 +13,20 @@ import java.util.List;
 @ExtendWith(MockitoExtension.class)
 class IPokedexTest {
 
+    @Mock
+    IPokemonMetadataProvider pokemonMetadataProvider;
+
+    @Mock
+    IPokemonFactory pokemonFactory;
+
     private Pokemon bulbizarre;
     private Pokemon aquali;
-
     private IPokedex pokedex;
 
 
     @BeforeEach
     void setUp() {
-        this.pokedex = new Pokedex();
+        this.pokedex = new Pokedex(pokemonFactory, pokemonMetadataProvider);
 
         bulbizarre = new Pokemon(
                 0,
@@ -89,7 +94,7 @@ class IPokedexTest {
             assertNotNull(pokedex.getPokemon(index0));
             assertEquals(bulbizarre, pokedex.getPokemon(index0));
             assertNotNull(pokedex.getPokemon(index1));
-            assertEquals(bulbizarre, pokedex.getPokemon(index1));
+            assertEquals(aquali, pokedex.getPokemon(index1));
         });
         assertThrows(PokedexException.class, () -> {
             pokedex.getPokemon(-1);
@@ -124,8 +129,8 @@ class IPokedexTest {
 
         List<Pokemon> pokemons = pokedex.getPokemons(orderById);
         assertNotNull(pokemons);
-        assertEquals(bulbizarre, pokemons.get(0));
-        assertEquals(aquali, pokemons.get(1));
+        assertEquals(bulbizarre, pokemons.get(1));
+        assertEquals(aquali, pokemons.get(0));
         assertEquals(2, pokemons.size());
     }
 }
