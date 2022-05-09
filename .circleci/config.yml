@@ -26,6 +26,10 @@ jobs:
       - run:
           name: Test
           command: mvn test
+      # upload jacoco test coverage to codecov.io
+      - run:
+          name: Code coverage upload
+          command: curl -Os https://uploader.codecov.io/latest/linux/codecov; chmod +x codecov; ./codecov
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
