@@ -58,11 +58,11 @@ class IPokedexFactoryTest {
     @Test
     void createPokedex() {
         assertDoesNotThrow(() -> {
-                Mockito.when(pokemonFactoryMock.createPokemon(
-                    Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt()))
-                    .thenReturn(bulbizarre);
-            Mockito.when(pokemonMetadataProviderMock.getPokemonMetadata(0)).thenReturn(aquali);
+            Mockito.when(pokemonMetadataProviderMock.getPokemonMetadata(Mockito.anyInt())).thenReturn(aquali);
         });
+        Mockito.when(pokemonFactoryMock.createPokemon(
+                Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt()))
+                .thenReturn(bulbizarre);
 
         // test function
         IPokedex pokedex = this.pokedexFactory.createPokedex(pokemonMetadataProviderMock, pokemonFactoryMock);
