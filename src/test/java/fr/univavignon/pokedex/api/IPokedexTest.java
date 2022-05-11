@@ -60,7 +60,6 @@ class IPokedexTest {
         //test adding all the pokemon
         assertEquals(0, pokedex.size());
         pokedex.addPokemon(bulbizarre);
-        System.out.println(pokedex);
         assertEquals(1, pokedex.size());
         pokedex.addPokemon(aquali);
         assertEquals(2, pokedex.size());

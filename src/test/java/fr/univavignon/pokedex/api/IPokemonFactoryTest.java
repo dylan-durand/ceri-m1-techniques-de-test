@@ -3,6 +3,8 @@ package fr.univavignon.pokedex.api;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -12,31 +14,56 @@ class IPokemonFactoryTest {
 
     private IPokemonFactory pokemonFactory;
 
+    @Mock
+    private IPokemonMetadataProvider pokemonMetadataProvider;
+
+    @Mock
+    private PokemonMetadata pokemonMetadataMock;
+
     @BeforeEach
     void setUp() {
-        pokemonFactory = new PokemonFactory();
+        pokemonFactory = new PokemonFactory(pokemonMetadataProvider);
     }
 
     @Test
     void createPokemon() {
-        Pokemon bulbizarre = pokemonFactory.createPokemon(0,613,64, 4000, 4 );
-        Pokemon aquali = pokemonFactory.createPokemon(133,2729,202, 5000, 4 );
+
+        // test with correct pokemon values
+        int baseAttack = 10;
+        int baseDefense = 10;
+        int baseStamina = 10;
+        int max_stat_by_individual = 15;
+        assertDoesNotThrow(() -> {
+            Mockito.when(pokemonMetadataProvider.getPokemonMetadata(Mockito.anyInt())).thenReturn(pokemonMetadataMock);
+        });
+        Mockito.when(pokemonMetadataMock.getName()).thenReturn("testName");
+        Mockito.when(pokemonMetadataMock.getAttack()).thenReturn(baseAttack);
+        Mockito.when(pokemonMetadataMock.getDefense()).thenReturn(baseDefense);
+        Mockito.when(pokemonMetadataMock.getStamina()).thenReturn(baseStamina);
+
+        Pokemon pokemonTestInstance = pokemonFactory.createPokemon(0,613,64, 4000, 4 );
+        assertNotNull(pokemonTestInstance);
+        assertEquals(0, pokemonTestInstance.getIndex());
+        assertEquals(613, pokemonTestInstance.getCp());
+        assertEquals(64, pokemonTestInstance.getHp());
+        assertEquals(4000, pokemonTestInstance.getDust());
+        assertEquals(4, pokemonTestInstance.getCandy());
+
+        assertEquals(baseAttack + (int) Math.round(max_stat_by_individual * pokemonTestInstance.getIv()),
+                pokemonTestInstance.getAttack());
+        assertEquals(baseDefense + (int) Math.round(max_stat_by_individual * pokemonTestInstance.getIv()),
+                pokemonTestInstance.getDefense());
+        assertEquals(baseStamina + (int) Math.round(max_stat_by_individual * pokemonTestInstance.getIv()),
+                pokemonTestInstance.getStamina());
+        assertDoesNotThrow(() -> {
+            Mockito.verify(pokemonMetadataProvider).getPokemonMetadata(0);
+        });
+
+
+        // test wrong pokemon values
         Pokemon pokemonWithNegatifAttributes = pokemonFactory.createPokemon(-1,-1,-1, -1, -1);
         Pokemon pokemonWithIdSuperiorThanOneHundredAndFifty = pokemonFactory.createPokemon(151,2729,202, 5000, 4 );
 
-        assertNotNull(bulbizarre);
-        assertEquals(0, bulbizarre.getIndex());
-        assertEquals(613, bulbizarre.getCp());
-        assertEquals(64, bulbizarre.getHp());
-        assertEquals(4000, bulbizarre.getDust());
-        assertEquals(4, bulbizarre.getCandy());
-
-        assertNotNull(aquali);
-        assertEquals(133, aquali.getIndex());
-        assertEquals(2729, aquali.getCp());
-        assertEquals(202, aquali.getHp());
-        assertEquals(5000, aquali.getDust());
-        assertEquals(4, aquali.getCandy());
 
         assertNotNull(pokemonWithNegatifAttributes);
         assert(pokemonWithNegatifAttributes.getIndex() >= 0

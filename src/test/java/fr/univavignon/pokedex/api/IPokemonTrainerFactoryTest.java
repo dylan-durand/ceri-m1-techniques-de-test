@@ -42,8 +42,6 @@ class IPokemonTrainerFactoryTest {
 
     @Test
     void createTrainer() {
-        System.out.println(pokedexFactory);
-        System.out.println(pokedex);
         Mockito.when(pokedexFactory.createPokedex(Mockito.any(), Mockito.any())).thenReturn(pokedex);
         assertDoesNotThrow(() -> {
                     Mockito.when(pokedex.getPokemon(Mockito.anyInt())).thenReturn(aquali);
