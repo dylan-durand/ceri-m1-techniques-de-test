@@ -45,6 +45,8 @@ jobs:
       - store_artifacts:
           path: target/site
           destination: docs
+      - store_test_results:
+          path: target/surefire-reports
 
   docs-deploy:
     docker:
@@ -72,11 +74,7 @@ workflows:
   default: # This is the name of the workflow, feel free to change it to better match your workflow.
     # Inside the workflow, you define the jobs you want to run.
     jobs:
-      - build-and-test :
-          filters :
-            branches :
-              only :
-                - master
+      - build-and-test
       - docs-deploy:
           requires:
             - build-and-test
