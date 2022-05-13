@@ -39,6 +39,11 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.7.1</version>
+            </plugin>
             <!-- JUnit 5 requires Surefire version 2.22.0 or higher -->
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -69,6 +74,25 @@
                         <goals>
                             <goal>report</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.github.bordertech.buildtools</groupId>
+                <artifactId>badger</artifactId>
+                <version>1.0.0</version>
+                <executions>
+                    <execution>
+                        <phase>site</phase>
+                        <goals>
+                            <goal>badges</goal>
+                        </goals>
+                        <configuration>
+                            <outputDir>badges</outputDir>
+                            <inputFiles>
+                                <inputFile>target/checkstyle-result.xml</inputFile>
+                            </inputFiles>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
