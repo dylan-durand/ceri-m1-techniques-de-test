@@ -22,7 +22,8 @@ class IPokemonFactoryTest {
 
     @BeforeEach
     void setUp() {
-        pokemonFactory = new PokemonFactory(pokemonMetadataProvider);
+        //pokemonFactory = new PokemonFactory(pokemonMetadataProvider);
+        pokemonFactory = new RocketPokemonFactory();
     }
 
     @Test
