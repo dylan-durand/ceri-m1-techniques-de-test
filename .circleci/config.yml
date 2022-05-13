@@ -43,6 +43,26 @@ jobs:
           path: target/site
           destination: docs
 
+  docs-deploy:
+    docker:
+      - image: node:8.10.0
+    steps:
+      - checkout
+      - attach_workspace:
+          at: target/site/apidocs
+      - run:
+          name: Install and configure dependencies
+          command: |
+            npm install -g --silent gh-pages@2.0.1
+            git config user.email "dylan.durand@alumni.univ-avignon.fr"
+            git config user.name "dylan-durand"
+      - add_ssh_keys:
+          fingerprints:
+            - "7b:8c:65:15:1b:29:f3:a4:4a:9a:be:4f:a8:e1:6c:16"
+      - run:
+          name: Deploy docs to gh-pages branch
+          command: gh-pages --dist target/site/apidocs --dotfiles --message "[skip ci] Updates"
+
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
@@ -54,3 +74,9 @@ workflows:
             branches :
               only :
                 - master
+      - docs-deploy:
+          requires:
+            - build-and-test
+          filters:
+            branches:
+              only: master
