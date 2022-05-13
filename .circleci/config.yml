@@ -39,8 +39,8 @@ jobs:
           name: build javadoc
           command: mvn javadoc:javadoc
       - persist_to_workspace:
-        root: target/site
-        paths: apidocs
+          root: target/site
+          paths: apidocs
       # upload build details
       - store_artifacts:
           path: target/site
